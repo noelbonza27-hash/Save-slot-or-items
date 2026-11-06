@@ -1,0 +1,27 @@
+-- Configuration
+local options = {
+    RepoUrl = "https://githubusercontent.com",
+    FileName = "Saved_Game_Slot"
+}
+
+-- Inform the user the process has started
+print("Initiating save slot backup... Please wait.")
+
+-- Safely load the universal save instance module
+local success, saveInstance = pcall(function()
+    return loadstring(game:HttpGet(options.RepoUrl .. "source.lua"))()
+end)
+
+if success and type(saveInstance) == "function" then
+    -- Execute the save function on the workspace/game objects
+    pcall(function()
+        saveInstance({
+            mode = "optimized", -- Can be "full", "optimized", or "scripts"
+            noscripts = false,   -- Set to true if you don't want to save code
+            timeout = 30         -- Time limit in seconds before canceling
+        })
+    end)
+    print("Success! The game structure has been saved to your executor's 'workspace' folder.")
+else
+    warn("Failed to execute save: Your executor may lack HttpGet or string loading capabilities.")
+end
